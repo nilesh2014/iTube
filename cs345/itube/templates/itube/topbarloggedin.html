@@ -1,0 +1,35 @@
+{% extends "itube/index.html" %}
+
+{% block topbarloggedin %}
+	<div class="container-fluid" style="margin-top: 20px">
+		<div class="row">
+			<div class="col-sm-1" style="margin-left: 10%">
+				<a href="/itube/index/" class="btn btn-default"><i class="fa fa-bars" aria-hidden="true"></i> iTube</a>
+			</div>
+			<div >
+				<a class="btn btn-default" id="music" value="10" href="/itube/index/category/?val=10"> Music</a>
+				<a class="btn btn-default" value="25"  href="/itube/index/category/?val=25"> News</a>
+				<a class="btn btn-default" value="24"  href="/itube/index/category/?val=24"> Entertainment</a>
+				<!-- <a class="btn btn-default" value="27"  href="/itube/index/category/?val=27" > Education</a> -->
+
+			</div>
+			<div class="col-sm-4" style="float: right;">
+				<p>Hi! {{ user.email }} <a class="btn btn-default" href="/itube/logout/">Log Out</a></p>
+			</div>
+		</div>
+	</div>
+	
+	
+{% endblock %}
+
+{% block topbarscript %}
+	<script type="text/javascript">
+		/*$("#login").click(function(){
+			alert("Hi");
+		});*/
+	</script>
+{% endblock %}
+
+{% block hi%}
+<p>Hello</p>
+{% endblock%}

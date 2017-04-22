@@ -1,0 +1,533 @@
+{% load static %}
+{% load social_widgets %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+		<link rel="stylesheet"  href="{% static 'bootstrap_select/dist/css/bootstrap-select.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css'%}">
+		<script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script> 
+		<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+		<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+		<!-- <link rel="stylesheet" type="text/css" href="{% static 'custom_css/mycss.css'%}">
+		Import Google Icon Font
+		
+		Import materialize.css
+		<link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}"  media="screen,projection"/>
+
+		Let browser know website is optimized for mobile
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>  -->
+		<title>iTube</title>
+
+	</head>
+	
+	<body>
+		{% block topbar %}
+		{% endblock %}
+		{% block topbarloggedin %}
+		{% endblock %}
+
+		<div class="container-fluid" style="margin-top: 20px">
+
+			<!-- Form for search box and search button-->
+			<!-- <form class="form-horizontal row" id="search-form" method="GET" action="/itube/index/" style="margin-left: 200px">
+				<div class="col-sm-4">
+					<input type="text" name="search_query" id="query_field" class="form-control"  placeholder="Search Here..." required>
+				</div>
+				<div class=" col-sm-1">
+					
+					<label class="text"><input type="checkbox" name="exact_match" id="exactmatch" value="0"> ExactMatch</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="control-lable	">Search By:</label>
+				</div>
+				<div class="col-sm-2">	
+					<select class="selectpicker form-control" data-style="btn btn-primary"   title="Choose option(s)" name="search_option">
+						<option>VedioTitle</option>
+						<option>ChennelTitle</option>
+						<option>Description</option>
+						<option>Tags</option>
+
+					</select>
+				</div>
+				<div class="col-sm-1">
+					<button class="btn btn-primary" id="make_query" >Search</button>
+				</div>
+			</form> -->
+			<div class="row">
+				<form class="form-inline">
+					<div class="input-group col-sm-3" style="margin-left: 14%">
+						<!-- <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span> -->
+						<input type="text" id="query_feild" name="search_query" class="form-control" placeholder="Enter Query..." required>
+					</div>
+					<div class="input-group" style="margin-left: 4%">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="exactmatch" name="exact_match" value="0"> Exact Match
+							</label>
+						</div>
+					</div>
+					<div class="form-group" style="margin-left: 4%">
+						<label class="text">Search In:</label>
+						<select class="selectpicker form-control " data-width="fit" multiple data-style="btn btn-default" data-alive-search="true" name="search_option" id="search_opt" value="0" >
+							<option value="2">VideoTitle</option>
+							<option value="3">ChannelTitle</option>
+							<option value="5">Description</option>
+							<option value="7">Tags</option>
+						</select>
+					</div>
+					<div class="form-group" style="margin-left: 5%">
+						<button class="btn btn-default" type="submit" id="make_query">Search</button>
+					</div>
+					
+				</form>
+			</div>
+
+			<div class="row" style="margin-top: 10px">
+				<div class="pannel panel-default">
+					<div class="panel-heading">
+					<p class="text-center">Popular Videos</p>
+					</div>
+					<div class="panel-body">
+						<div class="col-md-10 col-sm-offset-1">
+							<div class="carousel slide" id="recomended">
+								<!-- Carousel items -->
+								<div class=" carousel-inner">	
+									<div class="item active">
+										<div class="row">
+
+											{% for i in recomended %}
+											<div class="col-sm-2">
+												<a href="/itube/index/?id={{i.id}}"><img src="{{ i.url }}" alt="Image" class="img-responsive"></a>
+												<a href="/itube/index/?id={{i.id}}">{{ i.title}}</a>
+											</div>
+											{% if forloop.counter|divisibleby:"6" %}
+										</div>
+									</div>
+									<div class="item">
+										<div class="row">
+											{% endif %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+								<a class="left carousel-control" href="#recomended" data-slide="prev">‹</a>
+
+								<a class="right carousel-control" href="#recomended" data-slide="next">›</a>
+							</div>
+						</div>
+						<div class="col-sm-1">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- row for current vedio pannel and search result pannel -->
+			<div class="row" style="margin-top: 20px" id="cpv_srp">
+				
+				<div class="col-sm-1">
+					
+				</div>
+				<!-- column for CVP -->
+				<div class="col-sm-6 ">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Current Video Pannel
+						</div>
+						<div class="panel-body">
+							{% for k in currentVedio %}
+								<div class=row >
+									<iframe style="height:400px;width:100%" src="https://www.youtube.com/embed/{{ k.id }}" frameborder="0" allowfullscreen></iframe>
+								</div>
+								<div class="row">
+									<p style="font-size: 30px"> {{k.title}}</p>
+								</div>
+								<div class="row">
+									<p style="font-size: 15px">Description: {{k.description}}</p>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										Channel Title: <a href="/itube/index/?cid={{k.id}}" style="font-size: 16px">{{k.channelTitle}}</a>
+									</div>
+								</div>
+								<div class="row" style="margin-top: 3%">
+									<div class="col-sm-3" id="like_view">Likes: {{k.likeCount}}</div>
+									<div class="col-sm-3" id="dislike_view">Dislikes: {{k.dislikeCount}}</div>
+									<div class="col-sm-3" id="view_view">Views: {{k.viewCount}}</div>
+
+								</div>
+								<div class="row" style="margin-top: 3%">
+									<button id="like_btn{{k.id}}" class="btn btn-default" ><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</button>
+									<button id="dislike_btn{{k.id}}" class="btn btn-default"  ><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> DisLike</button>
+									<button id="favourite_btn{{k.id}}" class="btn btn-default" value="0"  ><i class="fa fa-heart-o" aria-hidden="true"></i> Favourite</button>
+
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+
+				<!-- column for SRP -->
+				<div class="col-sm-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							{% if  label %}
+								<p style="font-size: 17px">{{label}}</p>
+							{%else%}
+							Search Result Panel
+							{% endif %}
+
+						</div>
+						<div class="panel-body">
+							<!-- <div class="row">
+								<button id="filter_btn" class="btn btn-default dropdown-toggle center-block"  data-toggle="collapse" data-target=".demo"  data-toggle="dropdown">Filter <i  id="filter_arrow" class="fa fa-chevron-down" aria-hidden="true"></i></button>
+							</div>
+							<form class="form-inline">
+								<div class="row collapse demo" style="margin-top: 10px" id="sort_by">
+									<label type="text" style="margin-left: 5px">Sort By:</label>
+									<label class="radio-inline" id="sort_date"><input type="radio" name="sort" value="date">Date</label>
+									<label class="radio-inline"><input type="radio" name="sort" value="like">LikeCount</label>
+									<label class="radio-inline"><input type="radio" name="sort" value="view">ViewCount</label>
+
+								</div>
+							</form>
+
+							<form class="form-inline">	
+								<div class="row collapse demo" style="margin-top: 10px" id="veiw_first">
+									<label type="text" style="margin-left: 5px">Veiw First:</label>
+									<label class="radio-inline"><input type="radio" name="">Title</label>
+									<label class="radio-inline"><input type="radio">ChannelTitle</label>
+									<label class="radio-inline"><input type="radio">Description</label>
+									<label class="radio-inline"><input type="radio">Tags</label>
+								</div>
+							</form> -->
+
+							<!-- Actual Search Result OR Related Vedio-->
+							<div style="overflow:scroll; height:800px;">
+							{% if count != 0 %}
+								{% for i in result %}
+									<div class="row-fluid"  style="height: 100px; margin-top: 20px" data-internalid={{i.id}} id="div{{forloop.counter}}">
+										<div class="col-sm-4">
+											<a href="/itube/index/?id={{i.id}}" id="thumbnail_feild{{forloop.counter}}"><img src={{ i.url }} class="img-fluid" alt="ImageHere"></a>
+										</div>
+										<div class="col-sm-8" style="height: 100%">
+											<div class="row" style="height: 50%;overflow: hidden;text-overflow: ellipsis;" >
+												<a href="/itube/index/?id={{i.id}}" id="vedio_title_feild{{forloop.counter}}">{{ i.title }}</a>
+											</div>
+											<div class="row" style="height: 50%;overflow: hidden;text-overflow: ellipsis;" >
+												<a href="/itube/index/?cid={{i.id}}" id="vedio_desc_feild{{forloop.counter}}">{{ i.channelTitle }}</a>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% endif %}
+							</div>
+							<!-- <nav aria-label="...">
+								<ul class="pagination">
+									<li class="page-item disabled">
+										<span class="page-link">Previous</span>
+									</li>
+									<li class="page-item"><a class="page-link" href="#">1</a></li>
+									<li class="page-item active">
+							    		<span class="page-link">
+							    		2
+							    		<span class="sr-only">(current)</span>
+										</span>
+									</li>
+									<li class="page-item"><a class="page-link" href="#">3</a></li>
+									<li class="page-item" id="next_btn">
+									<a class="page-link" href="#">Next</a>
+									</li>
+								</ul>
+							</nav> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-1"></div>
+			</div>
+		</div>
+		
+	</body>
+		<script src="{% static 'bootstrap_select/dist/js/bootstrap-select.min.js' %}"></script>
+
+	<script>
+		$(document).ready(function(){
+
+			
+			$('#recomended').carousel({
+				interval: 10000
+			});
+
+			/*$('#recomended').on('slid.bs.carousel', function() {
+    	});*/
+			var like_count = 0;
+			var dislike_count = 0;
+			var favourite_count = 0;
+			{% if  user.is_authenticated %}
+				//{% if currentVedio|length  != 0 %}
+				
+						
+						{% if count_info.like == 1%}
+							$("[id^='like_btn']").addClass('active');
+							like_count = 1;
+							//alert("liked videoi");
+						{% endif%}
+						{% if count_info.dislike == 1%}
+							$("[id^='dislike_btn']").addClass('active');
+							dislike_count = 1;
+							//alert("liked videoi");
+						{% endif%}
+						{% if count_info.favourite == 1 %}
+							$("[id^='favourite_btn']").addClass('active');
+							favourite_count = 1;
+							//alert("liked videoi");
+						{% endif%}
+				//{% endif%}
+			{% endif%}
+			var filterClickCount =  0;
+			$('#exactmatch').click(function(){
+				if($("#exactmatch").val()==0)
+				{
+					console.log("ExactMatch1");
+				 $("#exactmatch").val(1);
+				}
+				else
+				{
+					console.log("ExactMatch0");
+
+				 $("#exactmatch").val(0);
+				}
+				//alert($("#exactmatch").val());
+			});
+			$("#filter_btn").click(function(){
+				/*if (filterClickCount == 0) {
+					// $("#sort_by").slideUp();
+					// $("#veiw_first").slideUp();
+					$("#filter_arrow").css("class", "fa fa-chevron-up")
+					filterClickCount = 1;
+					//alert("Total vedios are " + {{ count }} + ".");
+				}
+				else{
+					// $("#sort_by").slideDown();
+					// $("#veiw_first").slideDown();
+					$("#filter_arrow").css("class", "fa fa-chevron-down")
+					filterClickCount = 0;
+				}*/
+				$("#filter_arrow").toggleClass("fa fa-chevron-up").toggleClass("fa fa-chevron-down");
+			});
+
+			var all_vedios = document.querySelectorAll("[id^='thumbnail_feild'] , [id^='vedio_title_feild'] , [id^='vedio_desc_feild']");
+			for (var i = 0; i < all_vedios.length; i++) {
+				all_vedios[i].addEventListener("click", function(event){
+					//console.log("Type of div "+ i + " is: " + typeof this);
+					//console.log("Vedio Id is :" + typeof event.target.id); // event.target has all attributs of dom object
+					//var div = $(event.target.id).parent().closest('div');
+					var dom_id = event.target.id;
+					var vedioPosition = dom_id.substring(dom_id.indexOf("feild") + 5);
+					//console.log("Div has Vedio Id: " + vedioPosition);
+					getRelatedVedio(vedioPosition);
+				},false);
+			}
+			function getRelatedVedio(divNumber){
+				var vedioid = $("#div"+divNumber).attr('data-internalid');
+				console.log("Get Related Vedio for " +  divNumber + ". " + vedioid);
+				$.ajax({
+					url: '/itube/index/',
+					type:'GET',
+					data:{vedioId:$("#div"+divNumber).attr('data-internalid')},
+					success : function(json){
+						console.log("successfully got related vedios.");
+						$('html').load('/itube/index.html',json)
+						//$.get('/itube/index.html',json);
+					},
+
+					error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+					}
+				});
+			}
+			/*$("#search-form").submit(function(event){
+				//event.preventDefault();
+				var form = $("#search-form");
+				$.ajax({
+					url: '/itube/new/',
+					type: 'POST',
+					data: form.serialize(),
+					//datatype: 'json'
+					success : function(obj){
+						//$("#query_field").val("");
+						//$.get('/itube/index.html',json);
+						//var jsonObj = $.parseJSON(obj);
+						//{{ result }} = jsonObj;
+						//$("#cpv_srp").load()
+						//$("html").innnerHtml = obj;
+						//json.dumps(json)
+						//console.log("success" + json['result']['videoInfo']);
+					},
+
+					error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+					}
+				});
+			});*/
+			
+
+
+		
+
+		// using jQuery
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = jQuery.trim(cookies[i]);
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+		    return cookieValue;
+		}
+		function csrfSafeMethod(method) {
+		    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$("[id^='like_btn']").click(function(){
+			{% if user.is_authenticated %}
+			if(like_count == 0)
+			{	
+				//alert("liking vide.");
+				$(this).addClass('active');
+				$("[id^='dislike_btn']").removeClass('active');
+
+				like_count = 1;
+				dislike_count = 0;
+			}
+			else
+			{
+				$(this).removeClass('active')
+				like_count = 0;
+
+			}
+			btn_id = $(this).attr('id');
+			vid = btn_id.substring(btn_id.indexOf('like_btn') + 8);
+				//alert(vid);
+				$.ajax({
+					url:'/itube/index/like/',
+					method:'GET',
+					data:{'like':like_count,'dislike':dislike_count,  'id':vid},
+					success: function(retvalue){
+						console.log(retvalue.result);
+
+						$("#like_view").text("Likes: " + retvalue.result.like);
+						$("#dislike_view").text("Dislikes: " + retvalue.result.dislike);
+					},
+					error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+					}
+				});
+				{% else %}
+				$("#loginModal").modal();
+				//alert("Log in required.");
+				{% endif %}
+			});
+
+		$("[id^='dislike_btn']").click(function(){
+			{% if user.is_authenticated %}
+				$(this).toggleClass('active');
+				$("[id^='like_btn']").removeClass('active');
+			if(dislike_count==0)
+			{
+				dislike_count = 1;
+				like_count = 0;
+			}
+			else
+			{
+				
+				dislike_count = 0;
+
+			}
+			btn_id = $(this).attr('id');
+			vid = btn_id.substring(btn_id.indexOf('dislike_btn') + 11);
+				//alert(vid);
+				$.ajax({
+					url:'/itube/index/like/',
+					method:'GET',
+					data:{'like':like_count, 'dislike':dislike_count, 'id':vid},
+					success: function(retvalue){
+						//alert(retvalue.Result);
+						$("#like_view").text("Likes: " + retvalue.result.like);
+						$("#dislike_view").text("Dislikes: " + retvalue.result.dislike);
+					},
+					error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+					}
+				});
+				{% else %}
+				//alert("Log in required.");
+				$("#loginModal").modal();
+				{% endif %}
+		});
+
+		$("[id^='favourite_btn']").click(function(){
+			{% if user.is_authenticated %}
+				if (favourite_count == 0) {
+					favourite_count = 1;
+					$(this).addClass('active');
+				}
+				else{
+					favourite_count = 0;
+					$(this).removeClass('active');
+				}
+				
+				btn_id = $(this).attr('id');
+				vid = btn_id.substring(btn_id.indexOf('favourite_btn') + 13);
+				$.ajax({
+					url:'/itube/index/fav/',
+					method:'GET',
+					data:{'id':vid, 'fav':favourite_count},
+					success: function(retvalue){
+						//alert(retvalue.Result);
+					},
+					error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+					}
+				});
+			{% else %}
+				//alert("Log in required.");
+				$("#loginModal").modal();
+			{% endif %}
+
+		});
+
+		
+		/*$("#search_opt option").each(function()
+		{
+		    console.log("hi");
+		});*/
+		/*$("#query_feild").autocomplete({
+			valueKey: 'title',
+			source:$.ajax({
+				url:'/itube/index/get_query/',
+				method:'GET',
+				data:{},
+				success:function(ret){
+					return ret.data;
+				},
+				error : function(xhr,errmsg,err){
+						alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+				}
+			});
+		});
+*/
+});
+		
+	</script>
+		{% block topbarscript %}
+		{% endblock %}
+</html>

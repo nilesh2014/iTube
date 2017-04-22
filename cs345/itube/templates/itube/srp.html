@@ -1,0 +1,16 @@
+
+{% for i in result %}
+	<div class="row-fluid"  style="height: 100px; margin-top: 20px" data-internalid={{i.id}} id="div{{forloop.counter}}">
+		<div class="col-sm-4">
+			<img src={{ i.url }} class="img-fluid" alt="ImageHere" id="thumbnail_feild{{i.id}}">
+		</div>
+		<div class="col-sm-8" style="height: 100%">
+			<div class="row" style="height: 50%;overflow: hidden;text-overflow: ellipsis;" >
+				<a href="/itube/index/?id={{i.id}}" id="vedio_title_feild{{forloop.counter}}">{{ i.title }}</a>
+			</div>
+			<div class="row" style="height: 50%;overflow: hidden;text-overflow: ellipsis;" >
+				<a href="/itube/index/?cid={{i.channelId}}" id="vedio_desc_feild{{forloop.counter}}">{{ i.channelTitle }}</a>
+			</div>
+		</div>
+	</div>
+{% endfor %}

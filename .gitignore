@@ -1,0 +1,6 @@
+bin/
+lib/
+include/
+cs345/cs345/settings.py
+*.pyc
+*.json

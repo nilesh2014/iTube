@@ -1,0 +1,221 @@
+{% extends "itube/index.html" %}
+
+{% block topbar %}
+	<div class="container-fluid" style="margin-top: 20px">
+		<div class="row">
+			<div class="col-sm-1" style="margin-left: 10%">
+				<a href="/itube/index/" class="btn btn-default"><i class="fa fa-bars" aria-hidden="true"></i> iTube</a>
+			</div>
+			<div >
+				<a class="btn btn-default" id="music" value="10" href="/itube/index/category/?val=10"> Music</a>
+				<a class="btn btn-default" value="25"  href="/itube/index/category/?val=25"> News</a>
+				<a class="btn btn-default" value="24"  href="/itube/index/category/?val=24"> Entertainment</a>
+				<!-- <a class="btn btn-default" value="27"  href="/itube/index/category/?val=27"> Education</a> -->
+
+			</div>
+			<div class="col-sm-4" style="float: right;">
+				<a class="btn btn-default" id="login" data-toggle="modal" data-target="#loginModal">Signin</a>
+				<a class="btn btn-default" id="ignup" data-toggle="modal" data-target="#signupModal" >Signup</a>
+			</div>
+		</div>
+	</div>
+	
+	<div id="loginModal" class="modal fade">
+		<div class="modal-dialog" style="margin-top: 5%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Signin</h4>
+					<div style="float:right; font-size: 90%; position: relative; top:-10px"><a href="#"  data-toggle="modal" data-target="#forgotpassModal" data-dismiss="modal" >Forgot Password?</a></div>
+				</div>
+				<div class="modal-body">
+					<form id="loginform" class="form-horizontal" role="form" action="/itube/login/" method="POST">
+						{% csrf_token %}
+						<div style="margin-bottom: 25px" class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+							<input id="login-username" type="email" class="form-control" name="username" value="" placeholder="email" data-fv-emailaddress-message="The value is not a valid email address" required>                                        
+						</div>
+
+						<div style="margin-bottom: 25px" class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+							<input id="login-password" type="password" class="form-control" name="password" placeholder="password" required>
+						</div>
+
+
+
+						<div class="input-group">
+							<div class="checkbox">
+								<label>
+									<input id="login-remember" type="checkbox" name="remember_user" value="1"> Remember me
+								</label>
+							</div>
+						</div>
+
+
+						<div style="margin-top:10px" class="form-group">
+							<!-- Button -->
+
+							<div class="col-sm-12 controls">
+								<button id="btn-login" type="submit" class="btn btn-success"> Login </button>
+
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<div class="col-md-12 control">
+								<div style="border-top: 1px solid#888; padding-top:15px; font-size:90%" >
+									Don't have an account! 
+									<a href="#"  data-toggle="modal" data-target="#signupModal" data-dismiss="modal">
+										Sign Up Here
+									</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+		
+	</div>
+	<div id="signupModal" class="modal fade">
+		<div class="modal-dialog"  style="margin-top: 5%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Singnup</h4>
+					<div style="float:right; font-size: 90%; position: relative; top:-10px"><a  href="#"  data-toggle="modal" data-target="#loginModal" data-dismiss="modal" >Sign In</a></div>
+				</div>
+				<div class="modal-body">
+					<form id="signupform" class="form-horizontal" role="form" action="/itube/signup/" method="POST">
+						{% csrf_token %}
+
+						<div id="signupalert" style="display:none" class="alert alert-danger">
+							<p>Error:</p>
+							<span></span>
+						</div>
+
+
+
+						<div class="form-group">
+							<label for="email" class="col-md-3 control-label">Email</label>
+							<div class="col-md-9">
+								<input type="email" class="form-control" name="username" placeholder="Email Address" data-fv-emailaddress-message="The value is not a valid email address" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="firstname" class="col-md-3 control-label">First Name</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" name="firstname" placeholder="First Name" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-md-3 control-label">Last Name</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" name="lastname" placeholder="Last Name">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password" class="col-md-3 control-label">Password</label>
+							<div class="col-md-9">
+								<input type="password" class="form-control" name="password" placeholder="Password" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<!-- Button -->                                        
+							<div class="col-md-offset-3 col-md-9">
+							<button id="btn-signup" type="submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp; Sign Up</button>
+							</div>
+						</div>
+
+						<!-- <div style="border-top: 1px solid #999; padding-top:20px"  class="form-group">
+
+							<div class="col-md-offset-3 col-md-9">
+								<button id="btn-fbsignup" type="button" class="btn btn-primary"><i class="icon-facebook"></i>   Sign Up with Facebook</button>
+							</div>                                           
+
+						</div> -->
+
+
+
+					</form>
+				</div>
+				<!-- <div class="modal-footer">
+				</div> -->
+			</div>
+			
+		</div>
+		
+	</div>
+	<div id="forgotpassModal" class="modal fade">
+		<div class="modal-dialog"  style="margin-top: 5%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Reset Password</h4>
+					<div style="float:right; font-size: 90%; position: relative; top:-10px"><a  href="#" class="close" data-dismiss="modal" >&times;</a></div>
+				</div>
+				<div class="modal-body">
+					<form id="forgotpassform" class="form-horizontal" role="form">
+						{% csrf_token %}
+
+						<div id="forgotpassalert" style="display:none" class="alert alert-danger">
+							<p>Error:</p>
+							<span></span>
+						</div>
+
+
+
+						<div class="form-group">
+							<label for="email" class="col-md-3 control-label">Email</label>
+							<div class="col-md-9">
+								<input type="email" class="form-control" name="username" placeholder="Email Address" data-fv-emailaddress-message="The value is not a valid email address" required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="password" class="col-md-3 control-label">New Password</label>
+							<div class="col-md-9">
+								<input type="password" class="form-control" name="new_passwd" placeholder="Password">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<!-- Button -->                                        
+							<div class="col-md-offset-3 col-md-9">
+							<button id="btn-forgotpass" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp; Update</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block topbarscript %}
+	<script type="text/javascript">
+		/*$("#login").click(function(){
+			alert("Hi");
+		});*/
+		/*$("#btn-login").click(function(){
+			$.ajax({
+				url: '/itube/login/',
+				method:'POST',
+				data: $("#loginform").serialize(),
+				success: function(retvalue){
+					console.log("User Logded in successfully");
+				},
+				error : function(xhr,errmsg,err){
+					alert("Got error as a result." + xhr + " " + errmsg +" "  + err);
+				}
+			});
+		});*/
+	</script>
+{% endblock %}
+
+{% block hi%}
+<p>Hello</p>
+{% endblock%}
