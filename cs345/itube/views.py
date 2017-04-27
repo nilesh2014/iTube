@@ -135,7 +135,7 @@ def index(request):
 				count_info["dislike"] = user_log.dislike
 				count_info["favourite"] = user_log.favourite
 
-				update_count(0,0,1,0,video_id)
+			update_count(0,0,1,0,video_id)
 
 		elif "cid" in request.GET:
 			graph =  Graph("http://neo4j:nilesh123@localhost:7474/db/data/")
@@ -516,6 +516,8 @@ def update_count(like,dislike,view,fav,video_id):
 
 	#print(result)
 
+
+# Gives popular videos
 def get_recomended():
 	client = MongoClient('mongodb://nilesh:nilesh123@127.0.0.1:27017/')
 	db = client.myNewDB
@@ -540,6 +542,8 @@ def get_query_view(request):
 
 def category_view(request):
 	recomended = get_recomended()
+	if 'val' not in request.GET:
+		return index(request)
 	category = request.GET['val']
 	client = MongoClient('mongodb://nilesh:nilesh123@127.0.0.1:27017/')
 	db = client.myNewDB
